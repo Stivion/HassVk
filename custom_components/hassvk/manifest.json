@@ -2,7 +2,7 @@
   "domain": "hassvk",
   "name": "HassVk",
   "codeowners": [
-    "Stivion"
+    "@Stivion"
   ],
   "dependencies": [],
   "documentation": "https://github.com/Stivion/HassVk",
