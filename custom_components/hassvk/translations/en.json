@@ -1,0 +1,19 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Bot configuration",
+                "description": "If you need help with the configuration have a look [here]({documentation})",
+                "data": {
+                    "name": "Title",
+                    "access_token": "Access token",
+                    "group_id": "Group Id",
+                    "long_poll_wait_seconds": "Poll wait, seconds"
+                }
+            }
+        },
+        "error": {
+            "long_poll_api_disabled": "Long Poll API is disabled in community settings"
+        }
+    }
+}

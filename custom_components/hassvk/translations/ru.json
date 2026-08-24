@@ -1,0 +1,19 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Конфигурация бота",
+                "description": "Дополнительная информация о конфигурации находится [здесь]({documentation})",
+                "data": {
+                    "name": "Название",
+                    "access_token": "Ключ доступа",
+                    "group_id": "Идентификатор сообщества",
+                    "long_poll_wait_seconds": "Время поллинга, секунд"
+                }
+            }
+        },
+        "error": {
+            "long_poll_api_disabled": "Long Poll API в настройках сообщества выключен"
+        }
+    }
+}
