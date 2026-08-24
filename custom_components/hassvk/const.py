@@ -6,7 +6,7 @@ LOGGER: Logger = getLogger(__package__)
 
 DOMAIN = "hassvk"
 VK_API_VERSION = "5.199"
-EVENT_PREFIX = "vk_event"
+EVENT_NAME = "vk_event"
 
 CONF_GROUP_ID = "group_id"
 CONF_LONG_POLL_WAIT_SECONDS = "long_poll_wait_seconds"

@@ -2,7 +2,7 @@
 
 from typing import TYPE_CHECKING
 
-from .const import DOMAIN, EVENT_PREFIX
+from .const import DOMAIN, EVENT_NAME
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -42,6 +42,6 @@ class VkBotLongPoll:
                     await self.entry.runtime_data.api.async_mark_as_read(peer_id)
 
                 self.hass.bus.async_fire(
-                    f"{EVENT_PREFIX}_{upd.type}",
-                    {"object": upd.object},
+                    EVENT_NAME,
+                    {"event_type": upd.type, "object": upd.object},
                 )
