@@ -4,12 +4,12 @@
   "codeowners": [
     "@Stivion"
   ],
+  "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/Stivion/HassVk",
   "integration_type": "service",
   "iot_class": "cloud_polling",
-  "requirements": [],
-  "version": "1.0.0",
   "issue_tracker": "https://github.com/Stivion/HassVk/issues",
-  "config_flow": true
+  "requirements": [],
+  "version": "1.0.0"
 }
