@@ -1,8 +1,13 @@
 """Модуль для фонового Long Poll."""
 
+from asyncio import CancelledError
 from typing import TYPE_CHECKING
 
-from .const import DOMAIN, EVENT_NAME
+from aiohttp import ClientResponseError
+
+from custom_components.hassvk.api import VkApiError
+
+from .const import DOMAIN, EVENT_NAME, LOGGER
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -34,14 +39,21 @@ class VkBotLongPoll:
             self.task = None
 
     async def __start_polling(self) -> None:
-        while True:
-            poll_results = await self.entry.runtime_data.api.async_poll()
-            for upd in poll_results.updates:
-                if upd.type == "message_new":
-                    peer_id = upd.object["message"]["peer_id"]
-                    await self.entry.runtime_data.api.async_mark_as_read(peer_id)
+        try:
+            while True:
+                poll_results = await self.entry.runtime_data.api.async_poll()
+                for upd in poll_results.updates:
+                    if upd.type == "message_new":
+                        peer_id = upd.object["message"]["peer_id"]
+                        await self.entry.runtime_data.api.async_mark_as_read(peer_id)
 
-                self.hass.bus.async_fire(
-                    EVENT_NAME,
-                    {"event_type": upd.type, "object": upd.object},
-                )
+                    self.hass.bus.async_fire(
+                        EVENT_NAME,
+                        {"event_type": upd.type, "object": upd.object},
+                    )
+        except CancelledError:
+            raise
+        except VkApiError as err:
+            LOGGER.error(err)
+        except ClientResponseError as err:
+            LOGGER.error(err)

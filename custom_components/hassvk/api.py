@@ -90,6 +90,7 @@ class VkBotApi:
             headers=headers,
             data=body,
         ) as response:
+            response.raise_for_status()
             data: dict = await response.json()
 
         if "error" in data:
@@ -107,6 +108,7 @@ class VkBotApi:
         async with self.session.get(
             f"{self.server_info.server}?act=a_check&key={self.server_info.key}&ts={self.server_info.ts}&wait={self.wait}"
         ) as response:
+            response.raise_for_status()
             data: dict = await response.json()
 
         if "failed" in data:
@@ -154,6 +156,7 @@ class VkBotApi:
             headers=headers,
             data=body,
         ) as response:
+            response.raise_for_status()
             data: dict = await response.json()
 
         if "error" in data:

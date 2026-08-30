@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import voluptuous as vol
+from aiohttp import ClientResponseError
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_ACCESS_TOKEN, CONF_NAME
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -44,7 +45,10 @@ class VkBotFlowHandler(ConfigFlow, domain=DOMAIN):
                 if not long_poll_settings.is_enabled:
                     errors["base"] = ERR_LONG_POLL_API_DISABLED
             except VkApiError as err:
-                LOGGER.warning(err)
+                LOGGER.error(err)
+                errors["base"] = err.message
+            except ClientResponseError as err:
+                LOGGER.error(err)
                 errors["base"] = err.message
 
             if not errors:
