@@ -1,9 +1,9 @@
 """Модуль для фонового Long Poll."""
 
-from asyncio import CancelledError
+from asyncio import CancelledError, sleep
 from typing import TYPE_CHECKING
 
-from aiohttp import ClientResponseError
+from aiohttp import ClientError
 
 from custom_components.hassvk.api import VkApiError
 
@@ -39,8 +39,8 @@ class VkBotLongPoll:
             self.task = None
 
     async def __start_polling(self) -> None:
-        try:
-            while True:
+        while True:
+            try:
                 poll_results = await self.entry.runtime_data.api.async_poll()
                 for upd in poll_results.updates:
                     if upd.type == "message_new":
@@ -51,9 +51,11 @@ class VkBotLongPoll:
                         EVENT_NAME,
                         {"event_type": upd.type, "object": upd.object},
                     )
-        except CancelledError:
-            raise
-        except VkApiError as err:
-            LOGGER.error(err)
-        except ClientResponseError as err:
-            LOGGER.error(err)
+            except CancelledError:
+                raise
+            except VkApiError as err:
+                LOGGER.error(err)
+                await sleep(10)
+            except ClientError as err:
+                LOGGER.error(err)
+                await sleep(10)
