@@ -1,7 +1,10 @@
 """Модуль содержит логику интеграции с VK API."""
 
+from asyncio import sleep
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
+
+from aiohttp import ClientTimeout
 
 from .const import LOGGER, VK_API_VERSION
 
@@ -106,7 +109,8 @@ class VkBotApi:
             self.server_info = await self.__async_get_long_poll_server()
 
         async with self.session.get(
-            f"{self.server_info.server}?act=a_check&key={self.server_info.key}&ts={self.server_info.ts}&wait={self.wait}"
+            f"{self.server_info.server}?act=a_check&key={self.server_info.key}&ts={self.server_info.ts}&wait={self.wait}",
+            timeout=ClientTimeout(total=10),
         ) as response:
             response.raise_for_status()
             data: dict = await response.json()
@@ -119,7 +123,8 @@ class VkBotApi:
                 Приложение может получать события, с новым значением ts из ответа.
                 """
                 self.server_info.ts = data["ts"]
-                LOGGER.info("История устарела, повтор поллинга.")
+                LOGGER.warning("История устарела, повтор поллинга.")
+                await sleep(10)
                 return await self.async_poll()
 
             if fail_reason in (
@@ -131,7 +136,8 @@ class VkBotApi:
                 Нужно заново получить key и server методом groups.getLongPollServer.
                 """
                 self.server_info = await self.__async_get_long_poll_server()
-                LOGGER.info("Ключ истек или информация утрачена, повтор поллинга.")
+                LOGGER.warning("Ключ истек или информация утрачена, повтор поллинга.")
+                await sleep(10)
                 return await self.async_poll()
 
         self.server_info.ts = data["ts"]

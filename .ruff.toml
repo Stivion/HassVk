@@ -17,6 +17,7 @@ ignore = [
     "RUF002", # because comments written in Russian
     "RUF001",
     "D107",
+    "BLE001", # Allow catching Exception
 ]
 
 [lint.flake8-pytest-style]

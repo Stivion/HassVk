@@ -3,10 +3,6 @@
 from asyncio import CancelledError, sleep
 from typing import TYPE_CHECKING
 
-from aiohttp import ClientError
-
-from custom_components.hassvk.api import VkApiError
-
 from .const import DOMAIN, EVENT_NAME, LOGGER
 
 if TYPE_CHECKING:
@@ -53,9 +49,6 @@ class VkBotLongPoll:
                     )
             except CancelledError:
                 raise
-            except VkApiError as err:
-                LOGGER.error(err)
-                await sleep(10)
-            except ClientError as err:
+            except Exception as err:
                 LOGGER.error(err)
                 await sleep(10)
